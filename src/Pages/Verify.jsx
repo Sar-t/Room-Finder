@@ -11,15 +11,26 @@ const Verify = () => {
     const[loading,setLoading] = useState(true);
     useEffect(() => {
         setLoading(true);
-        supabase.auth.getSession().then(({ data: { session } }) => {
+        supabase.auth.getSession().then(async ({ data: { session } }) => {
             if (session) {
-            dispatch(login({ userData: session.user }));
-            navigate('/');
+              const {data, error} = await supabase.from("User").insert({
+                id: session.user.id,
+                name: session.user.user_metadata.name || "",
+                email: session.user.email,
+                phone_no: session.user.user_metadata.phone_no || "",
+                type: session.user.user_metadata.type || "renter",
+              })
+              if(error){
+                console.error("Error creating user profile:", error);
+                navigate('/login');
+                return;
+              }
+              dispatch(login({ userData: session.user }));
+              navigate('/');
             } else {
-            // Ask user to log in
+              setLoading(false);
             }
         });
-        setLoading(false);
     }, []);
 
   return (

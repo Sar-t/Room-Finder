@@ -19,27 +19,19 @@ const Signup = () => {
         email: data.email,
         password: data.password,
         options: {
-          emailRedirectTo: "http://localhost:5174/verify",
+          emailRedirectTo: `${window.location.origin}/verify`,
+          data: {
+            type: data.type,
+            name: data.name,
+            phone_no: data.phone_no,
+          },
         },
       });
-
+    
     if (!authError && authData.user) {
-      const { error: userError } = await supabase.from("User").insert({
-        id: authData.user.id,
-        name: data.name,
-        email: data.email,
-        password: data.password,
-        phone_no: data["phone no"],
-        type: data.type,
-      });
-
-      if (userError) {
-        setMessage("Error creating profile: " + userError.message);
-      } else {
-        setMessage("Signup successful! Please verify your email.");
-        reset();
-      }
-    } else {
+      setMessage("Signup successful! Please verify your email.");
+      reset();
+    }else {
       setMessage("Signup error: " + authError.message);
     }
 
@@ -119,11 +111,11 @@ const Signup = () => {
           <Input
             label="Phone Number"
             placeholder="10-digit mobile number"
-            {...register("phone no", { required: "Phone number required" })}
+            {...register("phone_no", { required: "Phone number required" })}
           />
-          {errors["phone no"] && (
+          {errors["phone_no"] && (
             <span className="text-red-600 text-sm">
-              {errors["phone no"].message}
+              {errors["phone_no"].message}
             </span>
           )}
 
@@ -134,6 +126,7 @@ const Signup = () => {
           />
 
           <Button
+            type = "submit"
             disabled={loading}
             className="mt-2 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"
           >

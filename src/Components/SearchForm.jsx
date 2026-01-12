@@ -20,10 +20,7 @@ const SearchForm = ({ defaultValues = {} }) => {
   const navigate = useNavigate();
 
   const onSubmit = (data) => {
-    const cleanData = Object.fromEntries(
-      Object.entries(data).filter(([_, v]) => v !== "")
-    );
-    const query = new URLSearchParams(cleanData).toString();
+    const query = new URLSearchParams(data).toString();
     navigate(`/search?${query}`);
   };
 

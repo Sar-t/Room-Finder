@@ -18,7 +18,7 @@ function App() {
       dispatch(logout());
     }
   });
-
+  
   // 2. Auth state listener
   const {
     data: { subscription },

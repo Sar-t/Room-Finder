@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 const MyProperties = () => {
   const userData = useSelector((state) => state.auth.userData);
+  console.log(userData);
   const userId = userData?.userData?.id;
 
   const [properties, setProperties] = useState([]);

@@ -21,12 +21,23 @@ const Login = () => {
       await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
-      });
-
+      });  
+      
     if (error || !authData?.user) {
       setMessage(error?.message || "Invalid credentials");
       setLoading(false);
       return;
+    }
+    const {data: {user}} = await supabase.auth.getUser();
+    const{data : existingUser} = await supabase.from("User").select("*").eq("id", user.id).single();
+    if(!existingUser){
+      await supabase.from("User").insert({
+        id: user.id,
+        name: user.user_metadata.name || "",
+        email: user.email,
+        phone_no: user.user_metadata.phone_no || "",
+        type: user.user_metadata.type || "renter",
+      });
     }
 
     dispatch(login(authData.user));
